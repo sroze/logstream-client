@@ -29,6 +29,14 @@ class Log
     /**
      * @return string
      */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
     public function getMessage()
     {
         return $this->message;

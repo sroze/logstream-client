@@ -2,13 +2,12 @@
 
 namespace ContinuousPipe\LogStream\Redis;
 
-use ContinuousPipe\LogStream\LoggerFactory;
+use ContinuousPipe\LogStream\LogAggregator;
 use ContinuousPipe\LogStream\LogRelatedObject;
-use ContinuousPipe\LogStream\RealTime\RealTimePublisher;
 use ContinuousPipe\LogStream\Serializer\LogSerializer;
 use Predis\Client;
 
-class RedisLoggerFactory implements LoggerFactory
+class RedisLogAggregator implements LogAggregator
 {
     /**
      * @var Client
@@ -30,11 +29,16 @@ class RedisLoggerFactory implements LoggerFactory
         $this->logSerializer = $logSerializer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createLogger(LogRelatedObject $object)
+    public function getLogsFor(LogRelatedObject $relatedObject)
     {
-        return new RedisLogger($this->redisClient, $this->listNamingStrategy, $this->logSerializer, $object);
+        $listName = $this->listNamingStrategy->getListName($relatedObject);
+        $rawLogs = $this->redisClient->lrange($listName, 0, -1);
+
+        $logs = [];
+        foreach ($rawLogs as $rawLog) {
+            $logs[] = $this->logSerializer->deserialize($rawLog);
+        }
+
+        return $logs;
     }
 }
