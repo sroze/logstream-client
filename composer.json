@@ -1,0 +1,16 @@
+{
+    "name": "continuous-pipe/log-stream",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "ContinuousPipe\\LogStream\\": "src/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "require": {
+        "symfony/serializer": "~2.7",
+        "predis/predis": "~1.0"
+    }
+}
