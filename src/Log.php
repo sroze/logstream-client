@@ -2,7 +2,7 @@
 
 namespace ContinuousPipe\LogStream;
 
-class Log
+class Log implements \JsonSerializable
 {
     const TYPE_ERROR = 'error';
     const TYPE_OUTPUT = 'output';
@@ -10,7 +10,7 @@ class Log
     private $type;
     private $message;
 
-    private function __construct($type, $message)
+    public function __construct($type, $message)
     {
         $this->type = $type;
         $this->message = $message;
@@ -40,5 +40,16 @@ class Log
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'type' => $this->type,
+            'message' => $this->message
+        ];
     }
 }

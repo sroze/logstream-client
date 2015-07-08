@@ -22,7 +22,7 @@ class JsonLogSerializer implements LogSerializer
      */
     public function deserialize($raw)
     {
-        $json = json_decode($raw);
+        $json = json_decode($raw, true);
 
         return new Log($json['type'], $json['message']);
     }
