@@ -21,6 +21,11 @@ class Log implements \JsonSerializable
         return new self(self::TYPE_ERROR, $message);
     }
 
+    public static function exception(\Exception $e)
+    {
+        return self::error($e->getMessage());
+    }
+
     public static function output($message)
     {
         return new self(self::TYPE_OUTPUT, $message);
