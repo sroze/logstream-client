@@ -25,11 +25,12 @@ class Logger
     }
 
     /**
-     * @param Log $log
+     * @param LogNode $log
+     * @return Log
      */
-    public function append(Log $log)
+    public function append(LogNode $log)
     {
-        $this->client->create($log, $this->parent);
+        return $this->client->create($log, $this->parent);
     }
 
     /**
@@ -38,5 +39,13 @@ class Logger
     public function start()
     {
         $this->client->updateStatus($this->parent, Log::RUNNING);
+    }
+
+    /**
+     * @return Log
+     */
+    public function getLog()
+    {
+        return $this->parent;
     }
 }

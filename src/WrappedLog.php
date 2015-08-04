@@ -20,11 +20,15 @@ class WrappedLog implements Log
     private $node;
 
     /**
+     * @param string $id
      * @param LogNode $node
+     * @param string $status
      */
-    public function __construct(LogNode $node)
+    public function __construct($id, LogNode $node, $status)
     {
+        $this->id = $id;
         $this->node = $node;
+        $this->status = $status;
     }
 
     /**

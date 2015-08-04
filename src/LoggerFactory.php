@@ -26,6 +26,16 @@ class LoggerFactory
     {
         $parent = $this->client->create(new Container());
 
+        return $this->from($parent);
+    }
+
+    /**
+     * @param Log $parent
+     *
+     * @return Logger
+     */
+    public function from(Log $parent)
+    {
         return new Logger($this->client, $parent);
     }
 }
