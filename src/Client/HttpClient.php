@@ -5,6 +5,7 @@ namespace LogStream\Client;
 use LogStream\Client;
 use LogStream\Log;
 use GuzzleHttp\Client as GuzzleClient;
+use LogStream\LogNode;
 
 class HttpClient implements Client
 {
@@ -24,9 +25,9 @@ class HttpClient implements Client
     private $baseUrl;
 
     /**
-     * @param GuzzleClient $httpClient
+     * @param GuzzleClient       $httpClient
      * @param Http\LogNormalizer $logNormalizer
-     * @param string $baseUrl
+     * @param string             $baseUrl
      */
     public function __construct(GuzzleClient $httpClient, Client\Http\LogNormalizer $logNormalizer, $baseUrl)
     {
@@ -38,15 +39,16 @@ class HttpClient implements Client
     /**
      * {@inheritdoc}
      */
-    public function create(Log $log, Log $parent = null)
+    public function create(LogNode $log, Log $parent = null)
     {
         $normalized = $this->logNormalizer->normalize($log);
+
         if (null !== $parent) {
             $normalized['parent'] = $parent->getId();
         }
 
         $this->httpClient->post($this->baseUrl.'/api/logs', [
-            'json' => $normalized
+            'json' => $normalized,
         ]);
     }
 
@@ -57,8 +59,8 @@ class HttpClient implements Client
     {
         $this->httpClient->put($this->baseUrl.'/api/logs/'.$log->getId(), [
             'json' => [
-                'status' => $status
-            ]
+                'status' => $status,
+            ],
         ]);
     }
 }

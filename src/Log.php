@@ -2,13 +2,11 @@
 
 namespace LogStream;
 
-interface Log
+interface Log extends LogNode
 {
     const RUNNING = 'running';
 
     public function isStarted();
-
-    public function jsonSerialize();
 
     public function getId();
 }

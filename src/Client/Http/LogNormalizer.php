@@ -2,18 +2,18 @@
 
 namespace LogStream\Client\Http;
 
-use LogStream\Log;
+use LogStream\LogNode;
 
 class LogNormalizer
 {
     /**
-     * Normalize a Log object.
+     * Normalize a LogNode object.
      *
-     * @param Log $log
+     * @param LogNode $log
      *
      * @return array
      */
-    public function normalize(Log $log)
+    public function normalize(LogNode $log)
     {
         return $log->jsonSerialize();
     }

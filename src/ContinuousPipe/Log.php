@@ -54,7 +54,7 @@ class Log implements \JsonSerializable
     {
         return [
             'type' => $this->type,
-            'message' => $this->message
+            'message' => $this->message,
         ];
     }
 }

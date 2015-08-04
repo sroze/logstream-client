@@ -5,7 +5,6 @@ namespace ContinuousPipe\LogStream\Redis;
 use ContinuousPipe\LogStream\Log;
 use ContinuousPipe\LogStream\Logger;
 use ContinuousPipe\LogStream\LogRelatedObject;
-use ContinuousPipe\LogStream\RealTime\RealTimePublisher;
 use ContinuousPipe\LogStream\Serializer\LogSerializer;
 use Predis\Client;
 

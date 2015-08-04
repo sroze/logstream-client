@@ -16,7 +16,7 @@ class Logger
 
     /**
      * @param Client $client
-     * @param Log $parent
+     * @param Log    $parent
      */
     public function __construct(Client $client, Log $parent)
     {
@@ -34,7 +34,6 @@ class Logger
 
     /**
      * Update the log status to running.
-     *
      */
     public function start()
     {
