@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use LogStream\Log;
 use LogStream\Client;
 
-class LoggerSpec extends ObjectBehavior
+class TreeLoggerSpec extends ObjectBehavior
 {
     public function let(Client $client, Log $log)
     {

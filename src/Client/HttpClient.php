@@ -72,8 +72,10 @@ class HttpClient implements Client
 
     /**
      * @param ResponseInterface $response
-     * @param LogNode $logNode
+     * @param LogNode           $logNode
+     *
      * @return WrappedLog
+     *
      * @throws ClientException
      */
     private function getWrappedResponseLog(ResponseInterface $response, LogNode $logNode)
@@ -84,6 +86,7 @@ class HttpClient implements Client
         }
 
         $data = $json['data'];
+
         return new WrappedLog($data['_id'], $logNode, array_key_exists('status', $data) ? $data['status'] : null);
     }
 }
