@@ -17,7 +17,7 @@
             <argument>%log_stream.authenticator_url%</argument>
         </service>
 
-        <service id="log_stream.logger_factory" class="LogStream\LoggerFactory">
+        <service id="log_stream.logger_factory" class="LogStream\TreeLoggerFactory">
             <argument type="service" id="log_stream.http_client" />
         </service>
     </services>

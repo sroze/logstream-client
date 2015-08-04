@@ -15,4 +15,9 @@ interface Logger
      * Update the log status to running.
      */
     public function start();
+
+    /**
+     * @return Log|null
+     */
+    public function getLog();
 }

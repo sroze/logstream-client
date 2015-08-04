@@ -2,40 +2,17 @@
 
 namespace LogStream;
 
-use LogStream\Node\Container;
-
-class LoggerFactory
+interface LoggerFactory
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @param Client $client
-     */
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
-
     /**
      * @return Logger
      */
-    public function create()
-    {
-        $parent = $this->client->create(new Container());
-
-        return $this->from($parent);
-    }
+    public function create();
 
     /**
      * @param Log $parent
      *
      * @return Logger
      */
-    public function from(Log $parent)
-    {
-        return new TreeLogger($this->client, $parent);
-    }
+    public function from(Log $parent);
 }

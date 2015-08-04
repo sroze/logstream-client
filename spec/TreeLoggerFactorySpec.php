@@ -8,7 +8,7 @@ use LogStream\TreeLogger;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class LoggerFactorySpec extends ObjectBehavior
+class TreeLoggerFactorySpec extends ObjectBehavior
 {
     public function let(Client $client)
     {
