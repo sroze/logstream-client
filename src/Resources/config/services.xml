@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="log_stream.guzzle_client" class="GuzzleHttp\Client">
+            <tag name="csa_guzzle.client" />
+        </service>
+
+        <service id="log_stream.http.normalizer" class="LogStream\Client\Http\LogNormalizer" />
+
+        <service id="log_stream.http_client" class="LogStream\Client\HttpClient">
+            <argument type="service" id="log_stream.guzzle_client" />
+            <argument type="service" id="log_stream.http.normalizer" />
+            <argument>%log_stream.authenticator_url%</argument>
+        </service>
+
+        <service id="log_stream.logger_factory" class="LogStream\LoggerFactory">
+            <argument type="service" id="log_stream.http_client" />
+        </service>
+    </services>
+</container>
