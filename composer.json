@@ -11,9 +11,10 @@
     },
     "require": {
         "symfony/serializer": "~2.7",
-        "predis/predis": "~1.0"
+        "predis/predis": "~1.0",
+        "guzzlehttp/guzzle": "~4.0"
     },
     "require-dev": {
-        "phpspec/phpspec": "^2.2"
+        "phpspec/phpspec": "2.3.x@dev"
     }
 }
