@@ -36,6 +36,6 @@ class LoggerFactory
      */
     public function from(Log $parent)
     {
-        return new Logger($this->client, $parent);
+        return new TreeLogger($this->client, $parent);
     }
 }

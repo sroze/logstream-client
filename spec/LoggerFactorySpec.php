@@ -4,7 +4,7 @@ namespace spec\LogStream;
 
 use LogStream\Client;
 use LogStream\Log;
-use LogStream\Logger;
+use LogStream\TreeLogger;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -19,7 +19,7 @@ class LoggerFactorySpec extends ObjectBehavior
     {
         $client->create(Argument::any())->willReturn($log);
 
-        $this->create()->shouldBeLike(new Logger(
+        $this->create()->shouldBeLike(new TreeLogger(
             $client->getWrappedObject(),
             $log->getWrappedObject()
         ));
