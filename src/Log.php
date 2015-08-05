@@ -9,4 +9,6 @@ interface Log extends LogNode
     public function isStarted();
 
     public function getId();
+
+    public function getStatus();
 }

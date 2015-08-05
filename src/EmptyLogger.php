@@ -2,8 +2,6 @@
 
 namespace LogStream;
 
-use LogStream\Node\Container;
-
 class EmptyLogger implements Logger
 {
     /**
@@ -24,7 +22,7 @@ class EmptyLogger implements Logger
      */
     public function append(LogNode $log)
     {
-        return new WrappedLog(uniqid(), new Container());
+        return new WrappedLog(uniqid(), $log);
     }
 
     /**

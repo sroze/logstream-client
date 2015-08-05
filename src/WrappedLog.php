@@ -56,4 +56,20 @@ class WrappedLog implements Log
     {
         return $this->id;
     }
+
+    /**
+     * @return LogNode
+     */
+    public function getNode()
+    {
+        return $this->node;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
 }

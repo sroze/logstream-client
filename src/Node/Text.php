@@ -29,4 +29,12 @@ class Text implements LogNode
             'contents' => $this->text,
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
 }
