@@ -39,4 +39,18 @@ class EmptyLogger implements Logger
     {
         return $this->parent;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function success()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function failure()
+    {
+    }
 }

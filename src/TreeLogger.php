@@ -47,4 +47,20 @@ class TreeLogger implements Logger
     {
         return $this->parent;
     }
+
+    /**
+     * Update the log status to success.
+     */
+    public function success()
+    {
+        $this->client->updateStatus($this->parent, Log::SUCCESS);
+    }
+
+    /**
+     * Update the log status to failure.
+     */
+    public function failure()
+    {
+        $this->client->updateStatus($this->parent, Log::FAILURE);
+    }
 }

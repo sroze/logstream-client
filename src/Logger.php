@@ -17,6 +17,16 @@ interface Logger
     public function start();
 
     /**
+     * Update the log status to success.
+     */
+    public function success();
+
+    /**
+     * Update the log status to failure.
+     */
+    public function failure();
+
+    /**
      * @return Log|null
      */
     public function getLog();
