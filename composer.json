@@ -15,7 +15,6 @@
         "guzzlehttp/guzzle": "~4.0"
     },
     "require-dev": {
-        "phpspec/phpspec": "2.3.x@dev",
-        "symfony/process": "^2.7"
+        "phpspec/phpspec": "2.3.x@dev"
     }
 }
