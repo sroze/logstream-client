@@ -36,4 +36,12 @@ class TreeLoggerFactory implements LoggerFactory
     {
         return new TreeLogger($this->client, $parent);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fromId($parentId)
+    {
+        return $this->from(new WrappedLog($parentId));
+    }
 }
