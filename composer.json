@@ -1,6 +1,5 @@
 {
     "name": "sroze/log-stream",
-    "version": "0.0.1",
     "autoload": {
         "psr-4": {
             "LogStream\\": "src/"
