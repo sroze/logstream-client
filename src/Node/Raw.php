@@ -12,7 +12,7 @@ class Raw implements LogNode
     public function jsonSerialize()
     {
         return [
-            'type' => 'raw'
+            'type' => 'raw',
         ];
     }
 }
