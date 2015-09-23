@@ -28,7 +28,7 @@ class DisplayLogger implements Logger
         $log = $this->logger->append($log);
 
         $serialized = $log->jsonSerialize();
-        echo sprintf('[%s] %s'."\n", $serialized['type'], $serialized['contents']);
+        echo sprintf('[%s] %s'."\n", $serialized['type'], isset($serialized['contents']) ? $serialized['contents'] : '[no content]');
 
         return $log;
     }
