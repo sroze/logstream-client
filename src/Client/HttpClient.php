@@ -2,6 +2,9 @@
 
 namespace LogStream\Client;
 
+use GuzzleHttp\Exception\AdapterException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\ResponseInterface;
 use LogStream\Client;
 use LogStream\Log;
@@ -45,9 +48,15 @@ class HttpClient implements Client
     {
         $normalized = $this->logNormalizer->normalize($log, $parent);
 
-        $response = $this->httpClient->post($this->baseUrl.'/api/logs', [
-            'json' => $normalized,
-        ]);
+        try {
+            $response = $this->httpClient->post($this->baseUrl . '/api/logs', [
+                'json' => $normalized,
+            ]);
+        } catch (AdapterException $e) {
+            throw new ClientException('Unable to create log', $e->getCode(), $e);
+        } catch (RequestException $e) {
+            throw new ClientException('Unable to create log', $e->getCode(), $e);
+        }
 
         return $this->getWrappedResponseLog($response, $log);
     }
@@ -57,11 +66,17 @@ class HttpClient implements Client
      */
     public function updateStatus(Log $log, $status)
     {
-        $response = $this->httpClient->put($this->baseUrl.'/api/logs/'.$log->getId(), [
-            'json' => [
-                'status' => $status,
-            ],
-        ]);
+        try {
+            $response = $this->httpClient->put($this->baseUrl.'/api/logs/'.$log->getId(), [
+                'json' => [
+                    'status' => $status,
+                ],
+            ]);
+        } catch (AdapterException $e) {
+            throw new ClientException('Unable to update log', $e->getCode(), $e);
+        } catch (RequestException $e) {
+            throw new ClientException('Unable to update log', $e->getCode(), $e);
+        }
 
         return $this->getWrappedResponseLog($response, $log);
     }
@@ -78,7 +93,7 @@ class HttpClient implements Client
     {
         $json = $response->json();
         if ($json['status'] != 'success') {
-            throw new ClientException('Response is not successful');
+            throw new ClientException(sprintf('Response is not successful, got status "%s"', $json['status']));
         }
 
         $data = $json['data'];

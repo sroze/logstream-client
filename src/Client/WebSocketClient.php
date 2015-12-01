@@ -40,7 +40,7 @@ class WebSocketClient implements Client
                 'body' => $this->normalizer->normalize($log),
             ]));
         } catch (\WebSocket\Exception $e) {
-            throw $e;
+            throw new ClientException('Unable to create log', $e->getCode(), $e);
         }
 
         return $this->getUpdatedLogFromResponse($log);
@@ -58,7 +58,7 @@ class WebSocketClient implements Client
                 'body' => $this->normalizer->normalize($log),
             ]));
         } catch (\WebSocket\Exception $e) {
-            throw $e;
+            throw new ClientException('Unable to update log', $e->getCode(), $e);
         }
 
         return $this->getUpdatedLogFromResponse($log);
@@ -75,7 +75,7 @@ class WebSocketClient implements Client
     {
         $response = $this->receiveResponse();
         if (!in_array($response['status'], [200, 201])) {
-            throw new \Exception('Status not expected');
+            throw new ClientException(sprintf('Status not expected, got %s', $response['status']));
         }
 
         $body = $response['body'];
@@ -93,19 +93,19 @@ class WebSocketClient implements Client
     {
         // Expecting confirmation
         if (null === ($rawResponse = $this->client->receive())) {
-            throw new \Exception('Received a NULL ack');
+            throw new ClientException('Received NULL from WebSocket server after sending log');
         }
 
         try {
             $response = \GuzzleHttp\json_decode($rawResponse, true);
         } catch (\InvalidArgumentException $e) {
-            throw new \Exception('Unable to decode response');
+            throw new ClientException('Unable to decode JSON response from WebSocket server');
         }
 
         if (!array_key_exists('status', $response)) {
-            throw new \Exception('Status not found in ACK answer');
+            throw new ClientException('Status not found in ACK answer');
         } else if (!array_key_exists('body', $response)) {
-            throw new \Exception('No body joined with the ACK answer');
+            throw new ClientException('No body joined with the ACK answer');
         }
 
         return $response;
