@@ -21,5 +21,10 @@ class LogStreamExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $clientProtocol = $config['websocket']['enabled'] ? 'websocket' : 'http';
+
+        $loader->load('client_'.$clientProtocol.'.xml');
+        $container->setAlias('log_stream.client', 'log_stream.'.$clientProtocol.'_client');
     }
 }

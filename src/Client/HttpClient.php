@@ -43,11 +43,7 @@ class HttpClient implements Client
      */
     public function create(LogNode $log, Log $parent = null)
     {
-        $normalized = $this->logNormalizer->normalize($log);
-
-        if (null !== $parent) {
-            $normalized['parent'] = $parent->getId();
-        }
+        $normalized = $this->logNormalizer->normalize($log, $parent);
 
         $response = $this->httpClient->post($this->baseUrl.'/api/logs', [
             'json' => $normalized,

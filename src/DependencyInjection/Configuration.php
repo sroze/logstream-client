@@ -18,6 +18,9 @@ class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->scalarNode('url')->isRequired()->end()
+                ->arrayNode('websocket')
+                    ->canBeEnabled()
+                ->end()
             ->end()
         ;
 

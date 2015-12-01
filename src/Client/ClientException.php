@@ -2,6 +2,8 @@
 
 namespace LogStream\Client;
 
-class ClientException extends \Exception
+use LogStream\Exception;
+
+class ClientException extends Exception
 {
 }
