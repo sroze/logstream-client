@@ -9,10 +9,8 @@
             <tag name="csa_guzzle.client" />
         </service>
 
-        <service id="log_stream.http.normalizer" class="LogStream\Client\Http\LogNormalizer" />
-
         <service id="log_stream.websocket_client" class="LogStream\Client\WebSocketClient">
-            <argument type="service" id="log_stream.http.normalizer" />
+            <argument type="service" id="log_stream.normalizer" />
             <argument>%log_stream.authenticator_url%</argument>
         </service>
     </services>

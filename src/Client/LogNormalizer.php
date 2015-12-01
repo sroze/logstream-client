@@ -1,6 +1,6 @@
 <?php
 
-namespace LogStream\Client\Http;
+namespace LogStream\Client;
 
 use LogStream\Log;
 use LogStream\LogNode;

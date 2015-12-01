@@ -20,7 +20,7 @@ class HttpClient implements Client
     private $httpClient;
 
     /**
-     * @var Http\LogNormalizer
+     * @var \LogStream\Client\LogNormalizer
      */
     private $logNormalizer;
 
@@ -31,10 +31,10 @@ class HttpClient implements Client
 
     /**
      * @param GuzzleClient       $httpClient
-     * @param Http\LogNormalizer $logNormalizer
+     * @param \LogStream\Client\LogNormalizer $logNormalizer
      * @param string             $baseUrl
      */
-    public function __construct(GuzzleClient $httpClient, Client\Http\LogNormalizer $logNormalizer, $baseUrl)
+    public function __construct(GuzzleClient $httpClient, Client\LogNormalizer $logNormalizer, $baseUrl)
     {
         $this->httpClient = $httpClient;
         $this->baseUrl = $baseUrl;

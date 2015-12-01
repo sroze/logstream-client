@@ -5,7 +5,7 @@ namespace spec\LogStream\Client;
 use GuzzleHttp\Client;
 use GuzzleHttp\Message\ResponseInterface;
 use GuzzleHttp\Stream\StreamInterface;
-use LogStream\Client\Http\LogNormalizer;
+use LogStream\Client\LogNormalizer;
 use LogStream\Log;
 use PhpSpec\ObjectBehavior;
 

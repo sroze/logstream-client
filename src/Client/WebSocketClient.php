@@ -15,15 +15,15 @@ class WebSocketClient implements Client
     private $client;
 
     /**
-     * @var Http\LogNormalizer
+     * @var \LogStream\Client\LogNormalizer
      */
     private $normalizer;
 
     /**
-     * @param Http\LogNormalizer $normalizer
+     * @param \LogStream\Client\LogNormalizer $normalizer
      * @param string $url
      */
-    public function __construct(Client\Http\LogNormalizer $normalizer, $url)
+    public function __construct(Client\LogNormalizer $normalizer, $url)
     {
         $this->client = new \WebSocket\Client($url);
         $this->normalizer = $normalizer;
