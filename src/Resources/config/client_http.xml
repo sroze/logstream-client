@@ -12,7 +12,7 @@
         <service id="log_stream.http_client" class="LogStream\Client\HttpClient">
             <argument type="service" id="log_stream.guzzle_client" />
             <argument type="service" id="log_stream.normalizer" />
-            <argument>%log_stream.authenticator_url%</argument>
+            <argument>%log_stream.url%</argument>
         </service>
     </services>
 </container>

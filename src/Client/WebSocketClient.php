@@ -71,13 +71,13 @@ class WebSocketClient implements Client
     }
 
     /**
-     * @param Log $log
+     * @param LogNode $logNode
      *
      * @return WrappedLog
      *
      * @throws \Exception
      */
-    private function getUpdatedLogFromResponse(Log $log)
+    private function getUpdatedLogFromResponse(LogNode $logNode)
     {
         $response = $this->receiveResponse();
         if (!in_array($response['status'], [200, 201])) {
@@ -85,7 +85,7 @@ class WebSocketClient implements Client
         }
 
         $body = $response['body'];
-        return new WrappedLog($body['_id'], $log, array_key_exists('status', $body) ? $body['status'] : null);
+        return new WrappedLog($body['_id'], $logNode, array_key_exists('status', $body) ? $body['status'] : null);
     }
 
     /**

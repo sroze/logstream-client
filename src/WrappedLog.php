@@ -44,9 +44,10 @@ class WrappedLog implements Log
      */
     public function jsonSerialize()
     {
-        return [
-            'status' => $this->status,
-        ] + $this->node->jsonSerialize();
+        $projection = null !== $this->node ? $this->node->jsonSerialize() : [];
+        $projection['status'] = $this->status;
+
+        return $projection;
     }
 
     /**

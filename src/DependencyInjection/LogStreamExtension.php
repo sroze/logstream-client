@@ -17,7 +17,7 @@ class LogStreamExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('log_stream.authenticator_url', $config['url']);
+        $container->setParameter('log_stream.url', $config['url']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

@@ -11,7 +11,7 @@
 
         <service id="log_stream.websocket_client" class="LogStream\Client\WebSocketClient">
             <argument type="service" id="log_stream.normalizer" />
-            <argument>%log_stream.authenticator_url%</argument>
+            <argument>%log_stream.url%</argument>
         </service>
     </services>
 </container>
