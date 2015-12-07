@@ -28,13 +28,6 @@ class EmptyLogger implements Logger
     /**
      * {@inheritdoc}
      */
-    public function start()
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getLog()
     {
         return $this->parent;
@@ -43,8 +36,17 @@ class EmptyLogger implements Logger
     /**
      * {@inheritdoc}
      */
+    public function start()
+    {
+        return $this->getLog();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function success()
     {
+        return $this->getLog();
     }
 
     /**
@@ -52,5 +54,6 @@ class EmptyLogger implements Logger
      */
     public function failure()
     {
+        return $this->getLog();
     }
 }

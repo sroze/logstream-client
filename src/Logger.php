@@ -13,16 +13,22 @@ interface Logger
 
     /**
      * Update the log status to running.
+     *
+     * @return Log
      */
     public function start();
 
     /**
      * Update the log status to success.
+     *
+     * @return Log
      */
     public function success();
 
     /**
      * Update the log status to failure.
+     *
+     * @return Log
      */
     public function failure();
 

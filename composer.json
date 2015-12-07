@@ -16,6 +16,8 @@
         "sroze/fault-tolerance": "dev-master"
     },
     "require-dev": {
-        "phpspec/phpspec": "2.3.x@dev"
+        "phpspec/phpspec": "2.3.x@dev",
+        "behat/behat": "^3.0",
+        "symfony/http-kernel": "^3.0"
     }
 }

@@ -43,15 +43,15 @@ class InMemoryLogger implements Logger
     }
 
     /**
-     * Update the log status to running.
+     * {@inheritdoc}
      */
     public function start()
     {
-        $this->updatesStatus(Log::RUNNING);
+        return $this->updatesStatus(Log::RUNNING);
     }
 
     /**
-     * @return Log|null
+     * {@inheritdoc}
      */
     public function getLog()
     {
@@ -59,23 +59,25 @@ class InMemoryLogger implements Logger
     }
 
     /**
-     * Update the log status to success.
+     * {@inheritdoc}
      */
     public function success()
     {
-        $this->updatesStatus(Log::SUCCESS);
+        return $this->updatesStatus(Log::SUCCESS);
     }
 
     /**
-     * Update the log status to failure.
+     * {@inheritdoc}
      */
     public function failure()
     {
-        $this->updatesStatus(Log::FAILURE);
+        return $this->updatesStatus(Log::FAILURE);
     }
 
     /**
      * @param string $status
+     *
+     * @return Log|null
      */
     private function updatesStatus($status)
     {
@@ -86,5 +88,7 @@ class InMemoryLogger implements Logger
         } else {
             throw new \RuntimeException('Non-mutable log found');
         }
+
+        return $log;
     }
 }

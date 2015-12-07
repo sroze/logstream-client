@@ -37,11 +37,11 @@ class TreeLogger implements Logger
      */
     public function start()
     {
-        $this->client->updateStatus($this->parent, Log::RUNNING);
+        return $this->client->updateStatus($this->parent, Log::RUNNING);
     }
 
     /**
-     * @return Log
+     * {@inheritdoc}
      */
     public function getLog()
     {
@@ -49,18 +49,18 @@ class TreeLogger implements Logger
     }
 
     /**
-     * Update the log status to success.
+     * {@inheritdoc}
      */
     public function success()
     {
-        $this->client->updateStatus($this->parent, Log::SUCCESS);
+        return $this->client->updateStatus($this->parent, Log::SUCCESS);
     }
 
     /**
-     * Update the log status to failure.
+     * {@inheritdoc}
      */
     public function failure()
     {
-        $this->client->updateStatus($this->parent, Log::FAILURE);
+        return $this->client->updateStatus($this->parent, Log::FAILURE);
     }
 }

@@ -1,0 +1,6 @@
+default:
+    suites:
+        application:
+            contexts:
+                - HttpContext:
+                    - http://logstream.docker
