@@ -40,6 +40,9 @@ class WebSocketClient implements Client
                 'body' => $this->normalizer->normalize($log),
             ]));
         } catch (\WebSocket\Exception $e) {
+            // Closing connection to allow next attempts to be possibly working
+            $this->client->close();
+
             throw new ClientException('Unable to create log', $e->getCode(), $e);
         }
 
@@ -58,6 +61,9 @@ class WebSocketClient implements Client
                 'body' => $this->normalizer->normalize($log),
             ]));
         } catch (\WebSocket\Exception $e) {
+            // Closing connection to allow next attempts to be possibly working
+            $this->client->close();
+
             throw new ClientException('Unable to update log', $e->getCode(), $e);
         }
 

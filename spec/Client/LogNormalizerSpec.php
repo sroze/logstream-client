@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\LogStream\Client\Http;
+namespace spec\LogStream\Client;
 
 use LogStream\Log;
 use PhpSpec\ObjectBehavior;
