@@ -3,13 +3,14 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use GuzzleHttp\Client;
-use LogStream\Client\Http\LogNormalizer;
 use LogStream\Client\HttpClient;
+use LogStream\Client\LogNormalizer;
+use LogStream\Client\WebSocketClient;
 use LogStream\Log;
 use LogStream\Node\Text;
 use LogStream\TreeLoggerFactory;
 
-class HttpContext implements Context, SnippetAcceptingContext
+class ClientContext implements Context, SnippetAcceptingContext
 {
     /**
      * @var TreeLoggerFactory
@@ -22,17 +23,27 @@ class HttpContext implements Context, SnippetAcceptingContext
     private $log;
 
     /**
+     * @param string $type
      * @param string $address
      */
-    public function __construct($address)
+    public function __construct($type, $address)
     {
-        $this->loggerFactory = new TreeLoggerFactory(
-            new HttpClient(
+        if ($type == 'http') {
+            $client = new HttpClient(
                 new Client(),
                 new LogNormalizer(),
                 $address
-            )
-        );
+            );
+        } else if ($type == 'websocket') {
+            $client = new WebSocketClient(
+                new LogNormalizer(),
+                $address
+            );
+        } else {
+            throw new \RuntimeException(sprintf('Client type "%s" is not supported', $type));
+        }
+
+        $this->loggerFactory = new TreeLoggerFactory($client);
     }
 
     /**

@@ -1,6 +1,12 @@
 default:
     suites:
-        application:
+        http:
             contexts:
-                - HttpContext:
+                - ClientContext:
+                    - http
                     - http://logstream.docker
+        websocket:
+            contexts:
+                - ClientContext:
+                    - websocket
+                    - ws://logstream.docker:8080
