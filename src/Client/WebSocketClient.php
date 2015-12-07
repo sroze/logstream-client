@@ -58,7 +58,9 @@ class WebSocketClient implements Client
             $this->client->send(json_encode([
                 'action' => 'update',
                 'id' => $log->getId(),
-                'body' => $this->normalizer->normalize($log),
+                'body' => [
+                    'status' => $status,
+                ],
             ]));
         } catch (\WebSocket\Exception $e) {
             // Closing connection to allow next attempts to be possibly working
