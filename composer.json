@@ -11,7 +11,9 @@
     "require": {
         "symfony/serializer": "~2.7",
         "predis/predis": "~1.0",
-        "guzzlehttp/guzzle": "~4.0"
+        "guzzlehttp/guzzle": "~4.0",
+        "textalk/websocket": "^1.2",
+        "sroze/fault-tolerance": "dev-master"
     },
     "require-dev": {
         "phpspec/phpspec": "2.3.x@dev"

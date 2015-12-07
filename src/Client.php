@@ -2,6 +2,8 @@
 
 namespace LogStream;
 
+use LogStream\Client\ClientException;
+
 interface Client
 {
     /**
@@ -10,6 +12,8 @@ interface Client
      * @param LogNode $log
      * @param Log     $parent
      *
+     * @throws ClientException
+     *
      * @return Log
      */
     public function create(LogNode $log, Log $parent = null);
@@ -17,6 +21,8 @@ interface Client
     /**
      * @param Log    $log
      * @param string $status
+     *
+     * @throws ClientException
      *
      * @return Log
      */

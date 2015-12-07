@@ -2,6 +2,9 @@
 
 namespace LogStream\Client;
 
+use GuzzleHttp\Exception\AdapterException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\ResponseInterface;
 use LogStream\Client;
 use LogStream\Log;
@@ -17,7 +20,7 @@ class HttpClient implements Client
     private $httpClient;
 
     /**
-     * @var Http\LogNormalizer
+     * @var \LogStream\Client\LogNormalizer
      */
     private $logNormalizer;
 
@@ -28,10 +31,10 @@ class HttpClient implements Client
 
     /**
      * @param GuzzleClient       $httpClient
-     * @param Http\LogNormalizer $logNormalizer
+     * @param \LogStream\Client\LogNormalizer $logNormalizer
      * @param string             $baseUrl
      */
-    public function __construct(GuzzleClient $httpClient, Client\Http\LogNormalizer $logNormalizer, $baseUrl)
+    public function __construct(GuzzleClient $httpClient, Client\LogNormalizer $logNormalizer, $baseUrl)
     {
         $this->httpClient = $httpClient;
         $this->baseUrl = $baseUrl;
@@ -43,15 +46,17 @@ class HttpClient implements Client
      */
     public function create(LogNode $log, Log $parent = null)
     {
-        $normalized = $this->logNormalizer->normalize($log);
+        $normalized = $this->logNormalizer->normalize($log, $parent);
 
-        if (null !== $parent) {
-            $normalized['parent'] = $parent->getId();
+        try {
+            $response = $this->httpClient->post($this->baseUrl . '/api/logs', [
+                'json' => $normalized,
+            ]);
+        } catch (AdapterException $e) {
+            throw new ClientException('Unable to create log', $e->getCode(), $e);
+        } catch (RequestException $e) {
+            throw new ClientException('Unable to create log', $e->getCode(), $e);
         }
-
-        $response = $this->httpClient->post($this->baseUrl.'/api/logs', [
-            'json' => $normalized,
-        ]);
 
         return $this->getWrappedResponseLog($response, $log);
     }
@@ -61,11 +66,17 @@ class HttpClient implements Client
      */
     public function updateStatus(Log $log, $status)
     {
-        $response = $this->httpClient->put($this->baseUrl.'/api/logs/'.$log->getId(), [
-            'json' => [
-                'status' => $status,
-            ],
-        ]);
+        try {
+            $response = $this->httpClient->put($this->baseUrl.'/api/logs/'.$log->getId(), [
+                'json' => [
+                    'status' => $status,
+                ],
+            ]);
+        } catch (AdapterException $e) {
+            throw new ClientException('Unable to update log', $e->getCode(), $e);
+        } catch (RequestException $e) {
+            throw new ClientException('Unable to update log', $e->getCode(), $e);
+        }
 
         return $this->getWrappedResponseLog($response, $log);
     }
@@ -82,7 +93,7 @@ class HttpClient implements Client
     {
         $json = $response->json();
         if ($json['status'] != 'success') {
-            throw new ClientException('Response is not successful');
+            throw new ClientException(sprintf('Response is not successful, got status "%s"', $json['status']));
         }
 
         $data = $json['data'];
