@@ -100,14 +100,20 @@ class WebSocketClient implements Client
     private function receiveResponse()
     {
         // Expecting confirmation
-        if (null === ($rawResponse = $this->client->receive())) {
+        try {
+            $rawResponse = $this->client->receive();
+        } catch (\WebSocket\Exception $e) {
+            throw new ClientException('Unable to receive response from WS', $e->getCode(), $e);
+        }
+
+        if (null === $rawResponse) {
             throw new ClientException('Received NULL from WebSocket server after sending log');
         }
 
         try {
             $response = \GuzzleHttp\json_decode($rawResponse, true);
         } catch (\InvalidArgumentException $e) {
-            throw new ClientException('Unable to decode JSON response from WebSocket server');
+            throw new ClientException('Unable to decode JSON response from WebSocket server', $e->getCode(), $e);
         }
 
         if (!array_key_exists('status', $response)) {
