@@ -3,7 +3,7 @@ default:
         http2:
             contexts:
                 - ClientContext:
-                    - https://localhost:8001
+                    - https://logstream_api.docker
 
         symfony:
             contexts:

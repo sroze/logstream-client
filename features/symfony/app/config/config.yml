@@ -6,4 +6,4 @@ framework:
         storage_id:                    "session.storage.mock_file"
 
 log_stream:
-    url: https://localhost:8001
+    url: https://logstream_api.docker
