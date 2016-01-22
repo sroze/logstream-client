@@ -3,6 +3,7 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use GuzzleHttp\Client;
+use LogStream\Client\CurlHttp2Client;
 use LogStream\Client\HttpClient;
 use LogStream\Client\LogNormalizer;
 use LogStream\Client\WebSocketClient;
@@ -30,7 +31,14 @@ class ClientContext implements Context, SnippetAcceptingContext
     {
         if ($type == 'http') {
             $client = new HttpClient(
-                new Client(),
+                new Client(['defaults' => [
+                    'verify' => false
+                ]]),
+                new LogNormalizer(),
+                $address
+            );
+        } else if ($type == 'http2') {
+            $client = new CurlHttp2Client(
                 new LogNormalizer(),
                 $address
             );

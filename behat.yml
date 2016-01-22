@@ -4,9 +4,14 @@ default:
             contexts:
                 - ClientContext:
                     - http
-                    - http://logstream.docker
+                    - https://localhost:8001
+        http2:
+            contexts:
+                - ClientContext:
+                    - http2
+                    - https://localhost:8001
         websocket:
             contexts:
                 - ClientContext:
                     - websocket
-                    - ws://logstream.docker:8080
+                    - ws://localhost:8080

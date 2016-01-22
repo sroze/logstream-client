@@ -3,7 +3,6 @@
 namespace LogStream\Client;
 
 use GuzzleHttp\Exception\AdapterException;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\ResponseInterface;
 use LogStream\Client;
@@ -14,11 +13,6 @@ use LogStream\WrappedLog;
 
 class HttpClient implements Client
 {
-    /**
-     * @var GuzzleClient
-     */
-    private $httpClient;
-
     /**
      * @var \LogStream\Client\LogNormalizer
      */
