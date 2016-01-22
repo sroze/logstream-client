@@ -3,5 +3,17 @@ default:
         http2:
             contexts:
                 - ClientContext:
-                    - http2
                     - https://localhost:8001
+
+        symfony:
+            contexts:
+                - ClientContext:
+                    - @log_stream.logger_factory
+
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                env: "test"
+                debug: "true"
+                path: "features/symfony/app/AppKernel.php"
+                bootstrap: "features/symfony/app/bootstrap.php"

@@ -3,6 +3,7 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use LogStream\Client\CurlHttp2Client;
+use LogStream\LoggerFactory;
 use LogStream\Tree\Normalizer\TreeLogNormalizer;
 use LogStream\Log;
 use LogStream\Node\Normalizer\BaseNormalizer;
@@ -22,23 +23,22 @@ class ClientContext implements Context, SnippetAcceptingContext
     private $log;
 
     /**
-     * @param string $type
-     * @param string $address
+     * @param LoggerFactory|string $loggerFactoryOrAddress
      */
-    public function __construct($type, $address)
+    public function __construct($loggerFactoryOrAddress)
     {
-        if ($type == 'http2') {
-            $client = new CurlHttp2Client(
+        if ($loggerFactoryOrAddress instanceof LoggerFactory) {
+            $this->loggerFactory = $loggerFactoryOrAddress;
+        } else if (is_string($loggerFactoryOrAddress)) {
+            $this->loggerFactory = new TreeLoggerFactory(new CurlHttp2Client(
                 new TreeLogNormalizer(
                     new BaseNormalizer()
                 ),
-                $address
-            );
+                $loggerFactoryOrAddress
+            ));
         } else {
-            throw new \RuntimeException(sprintf('Client type "%s" is not supported', $type));
+            throw new \RuntimeException(sprintf('Should be either an address or a log factory'));
         }
-
-        $this->loggerFactory = new TreeLoggerFactory($client);
     }
 
     /**
