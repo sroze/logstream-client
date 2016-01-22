@@ -17,3 +17,4 @@ Feature:
     And I have a text log
     When I update the status of the log with "success"
     Then the log should be successfully updated
+    And the log should have the status "success"

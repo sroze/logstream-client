@@ -21,7 +21,7 @@ class OperationRunnerDecorator implements Client
     private $operationRunner;
 
     /**
-     * @param Client $client
+     * @param Client          $client
      * @param OperationRunner $operationRunner
      */
     public function __construct(Client $client, OperationRunner $operationRunner)
@@ -35,7 +35,7 @@ class OperationRunnerDecorator implements Client
      */
     public function create(LogNode $log, Log $parent = null)
     {
-        $operation = new Callback(function() use ($log, $parent) {
+        $operation = new Callback(function () use ($log, $parent) {
             return $this->client->create($log, $parent);
         });
 
@@ -49,7 +49,7 @@ class OperationRunnerDecorator implements Client
      */
     public function updateStatus(Log $log, $status)
     {
-        $operation = new Callback(function() use ($log, $status) {
+        $operation = new Callback(function () use ($log, $status) {
             return $this->client->updateStatus($log, $status);
         });
 

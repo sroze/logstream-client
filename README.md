@@ -10,14 +10,14 @@ This library can be used both as standalone or with the Symfony integration.
 
 ```php
 use GuzzleHttp\Client;
-use LogStream\Client\Http\LogNormalizer;
+use LogStream\Client\Http\JsonSerializableNormalizer;
 use LogStream\Client\HttpClient;
 use LogStream\TreeLoggerFactory;
 
 $loggerFactory = new TreeLoggerFactory(
     new HttpClient(
         new Client(),
-        new LogNormalizer(),
+        new JsonSerializableNormalizer(),
         $address
     )
 );

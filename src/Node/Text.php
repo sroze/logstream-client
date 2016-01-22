@@ -2,9 +2,7 @@
 
 namespace LogStream\Node;
 
-use LogStream\LogNode;
-
-class Text implements LogNode
+class Text implements Node
 {
     /**
      * @var string

@@ -2,19 +2,14 @@
 
 namespace LogStream\Client;
 
-use GuzzleHttp\Exception\AdapterException;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Message\ResponseInterface;
 use LogStream\Client;
 use LogStream\Log;
-use GuzzleHttp\Client as GuzzleClient;
-use LogStream\LogNode;
-use LogStream\WrappedLog;
+use LogStream\Client\Normalizer\LogNormalizer;
 
 class CurlHttp2Client implements Client
 {
     /**
-     * @var \LogStream\Client\LogNormalizer
+     * @var LogNormalizer
      */
     private $logNormalizer;
 
@@ -24,15 +19,15 @@ class CurlHttp2Client implements Client
     private $baseUrl;
 
     /**
-     * @var resource
+     * @var resource|null
      */
     private $curlHandler;
 
     /**
-     * @param \LogStream\Client\LogNormalizer $logNormalizer
-     * @param string             $baseUrl
+     * @param LogNormalizer $logNormalizer
+     * @param string        $baseUrl
      */
-    public function __construct(Client\LogNormalizer $logNormalizer, $baseUrl)
+    public function __construct(LogNormalizer $logNormalizer, $baseUrl)
     {
         $this->baseUrl = $baseUrl;
         $this->logNormalizer = $logNormalizer;
@@ -41,19 +36,12 @@ class CurlHttp2Client implements Client
     /**
      * {@inheritdoc}
      */
-    public function create(LogNode $log, Log $parent = null)
+    public function create(Log $log)
     {
-        $normalized = $this->logNormalizer->normalize($log, $parent);
+        $normalized = $this->logNormalizer->normalize($log);
+        $response = $this->request('POST', $this->baseUrl.'/v1/logs', $normalized);
 
-        try {
-            $response = $this->request('POST', $this->baseUrl.'/v1/logs', $normalized);
-        } catch (AdapterException $e) {
-            throw new ClientException('Unable to create log', $e->getCode(), $e);
-        } catch (RequestException $e) {
-            throw new ClientException('Unable to create log', $e->getCode(), $e);
-        }
-
-        return $this->getWrappedResponseLog($response, $log);
+        return $this->logNormalizer->denormalize($response);
     }
 
     /**
@@ -61,34 +49,25 @@ class CurlHttp2Client implements Client
      */
     public function updateStatus(Log $log, $status)
     {
-        try {
-            $response = $this->request('PUT', $this->baseUrl.'/v1/logs/'.$log->getId(), [
-                'status' => $status,
-            ]);
-        } catch (AdapterException $e) {
-            throw new ClientException('Unable to update log', $e->getCode(), $e);
-        } catch (RequestException $e) {
-            throw new ClientException('Unable to update log', $e->getCode(), $e);
-        }
+        $url = sprintf('%s/v1/logs/%s', $this->baseUrl, $log->getId());
+        $response = $this->request('PATCH', $url, [
+            'status' => $status,
+        ]);
 
-        return $this->getWrappedResponseLog($response, $log);
+        return $this->logNormalizer->denormalize($response);
     }
 
     /**
-     * @param string $response
-     * @param LogNode           $logNode
+     * Run the given request.
      *
-     * @return WrappedLog
+     * @param string $method
+     * @param string $path
+     * @param array  $body
      *
      * @throws ClientException
+     *
+     * @return string
      */
-    private function getWrappedResponseLog($response, LogNode $logNode)
-    {
-        $data = json_decode($response, true);
-
-        return new WrappedLog($data['_id'], $logNode, array_key_exists('status', $data) ? $data['status'] : null);
-    }
-
     private function request($method, $path, array $body = [])
     {
         $data_string = json_encode($body);
@@ -97,14 +76,13 @@ class CurlHttp2Client implements Client
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string),
+            'Content-Length: '.strlen($data_string),
         ]);
 
-        $result = $this->curlExecWithMulti($ch);
+        $contents = $this->executeMultiplexedRequest($ch);
         $info = curl_getinfo($ch);
         curl_close($ch);
 
@@ -112,10 +90,23 @@ class CurlHttp2Client implements Client
             throw new ClientException(sprintf('Found status %d', $info['http_code']));
         }
 
-        return $result;
+        if (null === ($json = json_decode($contents, true))) {
+            throw new ClientException('The response is not a valid JSON object');
+        } elseif (!array_key_exists('_id', $json)) {
+            throw new ClientException('No `_id` found in response');
+        }
+
+        return $json;
     }
 
-    private function curlExecWithMulti($handle)
+    /**
+     * Execute the given cURL handle in a multiplexed handler.
+     *
+     * @param resource $handle
+     *
+     * @return string
+     */
+    private function executeMultiplexedRequest($handle)
     {
         if (null === $this->curlHandler) {
             $this->curlHandler = curl_multi_init();
@@ -125,7 +116,7 @@ class CurlHttp2Client implements Client
         curl_multi_add_handle($this->curlHandler, $handle);
 
         // Do all the processing.
-        $active = NULL;
+        $active = null;
         do {
             $ret = curl_multi_exec($this->curlHandler, $active);
         } while ($ret == CURLM_CALL_MULTI_PERFORM);
@@ -149,11 +140,14 @@ class CurlHttp2Client implements Client
         return $contents;
     }
 
+    /**
+     * Close the multiplex handler that the same time than the class
+     * is destroyed.
+     */
     public function __destroy()
     {
         if (null !== $this->curlHandler) {
             curl_multi_close($this->curlHandler);
         }
     }
-
 }

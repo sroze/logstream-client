@@ -1,7 +1,10 @@
 <?php
 
-namespace LogStream;
+namespace LogStream\Tree;
 
+use LogStream\Client;
+use LogStream\Log;
+use LogStream\LoggerFactory;
 use LogStream\Node\Container;
 
 class TreeLoggerFactory implements LoggerFactory
@@ -24,24 +27,26 @@ class TreeLoggerFactory implements LoggerFactory
      */
     public function create()
     {
-        $parent = $this->client->create(new Container());
+        $log = $this->client->create(
+            TreeLog::fromNode(new Container()
+        ));
 
-        return $this->from($parent);
+        return $this->from($log);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function from(Log $parent)
+    public function fromId($identifier)
     {
-        return new TreeLogger($this->client, $parent);
+        return $this->from(TreeLog::fromId($identifier));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function fromId($parentId)
+    public function from(Log $log)
     {
-        return $this->from(new WrappedLog($parentId));
+        return new TreeLogger($this->client, $log);
     }
 }

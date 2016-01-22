@@ -2,9 +2,7 @@
 
 namespace LogStream\Node;
 
-use LogStream\LogNode;
-
-class Raw implements LogNode
+class Raw implements Node
 {
     /**
      * {@inheritdoc}

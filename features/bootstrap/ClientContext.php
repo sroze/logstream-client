@@ -2,14 +2,12 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use GuzzleHttp\Client;
 use LogStream\Client\CurlHttp2Client;
-use LogStream\Client\HttpClient;
-use LogStream\Client\LogNormalizer;
-use LogStream\Client\WebSocketClient;
+use LogStream\Tree\Normalizer\TreeLogNormalizer;
 use LogStream\Log;
+use LogStream\Node\Normalizer\BaseNormalizer;
 use LogStream\Node\Text;
-use LogStream\TreeLoggerFactory;
+use LogStream\Tree\TreeLoggerFactory;
 
 class ClientContext implements Context, SnippetAcceptingContext
 {
@@ -29,22 +27,11 @@ class ClientContext implements Context, SnippetAcceptingContext
      */
     public function __construct($type, $address)
     {
-        if ($type == 'http') {
-            $client = new HttpClient(
-                new Client(['defaults' => [
-                    'verify' => false
-                ]]),
-                new LogNormalizer(),
-                $address
-            );
-        } else if ($type == 'http2') {
+        if ($type == 'http2') {
             $client = new CurlHttp2Client(
-                new LogNormalizer(),
-                $address
-            );
-        } else if ($type == 'websocket') {
-            $client = new WebSocketClient(
-                new LogNormalizer(),
+                new TreeLogNormalizer(
+                    new BaseNormalizer()
+                ),
                 $address
             );
         } else {
@@ -75,7 +62,9 @@ class ClientContext implements Context, SnippetAcceptingContext
      */
     public function iCreateATextLogContainingUnderTheContainerLog($contents)
     {
-        $this->log = $this->loggerFactory->from($this->log)->append(new Text($contents));
+        $logger = $this->loggerFactory->from($this->log)->child(new Text($contents));
+
+        $this->log = $logger->getLog();
     }
 
     /**
@@ -91,7 +80,7 @@ class ClientContext implements Context, SnippetAcceptingContext
      */
     public function iUpdateTheStatusOfTheLogWith($status)
     {
-        $this->log = $this->loggerFactory->from($this->log)->$status();
+        $this->log = $this->loggerFactory->from($this->log)->updateStatus($status)->getLog();
     }
 
     /**
@@ -102,6 +91,20 @@ class ClientContext implements Context, SnippetAcceptingContext
     {
         if (null === $this->log) {
             throw new \RuntimeException('The found log is null, looks not good at all');
+        }
+    }
+
+    /**
+     * @Then the log should have the status :status
+     */
+    public function theLogShouldHaveTheStatus($status)
+    {
+        if ($status != $this->log->getStatus()) {
+            throw new \RuntimeException(sprintf(
+                'Found status %s instead of %s',
+                $this->log->getStatus(),
+                $status
+            ));
         }
     }
 }

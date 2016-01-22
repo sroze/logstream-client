@@ -2,9 +2,7 @@
 
 namespace LogStream\Node;
 
-use LogStream\LogNode;
-
-class Container implements LogNode
+class Container implements Node
 {
     /**
      * {@inheritdoc}

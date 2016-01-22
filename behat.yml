@@ -1,17 +1,7 @@
 default:
     suites:
-        http:
-            contexts:
-                - ClientContext:
-                    - http
-                    - https://localhost:8001
         http2:
             contexts:
                 - ClientContext:
                     - http2
                     - https://localhost:8001
-        websocket:
-            contexts:
-                - ClientContext:
-                    - websocket
-                    - ws://localhost:8080
