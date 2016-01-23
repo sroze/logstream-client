@@ -9,18 +9,18 @@
         "bin-dir": "bin"
     },
     "require": {
-        "symfony/serializer": "~2.7",
-        "predis/predis": "~1.0",
-        "guzzlehttp/guzzle": "~4.0",
-        "textalk/websocket": "^1.2"
+        "symfony/serializer": "~2.8",
+        "predis/predis": "~1.0"
     },
     "suggest": {
-        "sroze/fault-tolerance": "To handle fault tolerant LogStream"
+        "sroze/tolerance": "To handle fault tolerant LogStream"
     },
     "require-dev": {
         "phpspec/phpspec": "2.3.x@dev",
         "behat/behat": "^3.0",
-        "symfony/http-kernel": "^3.0",
-        "sroze/fault-tolerance": "~0.0.1"
+        "behat/symfony2-extension": "^2.1",
+        "symfony/http-kernel": "~2.8",
+        "symfony/dependency-injection": "~2.8",
+        "symfony/config": "~2.8"
     }
 }

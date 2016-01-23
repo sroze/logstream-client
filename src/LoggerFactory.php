@@ -10,18 +10,18 @@ interface LoggerFactory
     public function create();
 
     /**
-     * @param Log $parent
+     * @param Log $log
      *
      * @return Logger
      */
-    public function from(Log $parent);
+    public function from(Log $log);
 
     /**
      * Create a logger from the ID of the parent.
      *
-     * @param string $parentId
+     * @param string $identifier
      *
      * @return Logger
      */
-    public function fromId($parentId);
+    public function fromId($identifier);
 }

@@ -2,18 +2,12 @@
 
 namespace LogStream;
 
-interface Log extends LogNode
+interface Log
 {
+    const PENDING = 'pending';
     const RUNNING = 'running';
     const SUCCESS = 'success';
     const FAILURE = 'failure';
-
-    /**
-     * Is the log started ?
-     *
-     * @return bool
-     */
-    public function isStarted();
 
     /**
      * Return the unique identifier of the log.
@@ -28,4 +22,11 @@ interface Log extends LogNode
      * @return string
      */
     public function getStatus();
+
+    /**
+     * Get parent identifier of the given log.
+     *
+     * @return string|null
+     */
+    public function getParentIdentifier();
 }

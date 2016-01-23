@@ -2,38 +2,26 @@
 
 namespace LogStream;
 
+use LogStream\Node\Node;
+
 interface Logger
 {
     /**
-     * @param LogNode $log
+     * @param Node $node
      *
-     * @return Log
+     * @return Logger
      */
-    public function append(LogNode $log);
+    public function child(Node $node);
 
     /**
      * Update the log status to running.
      *
-     * @return Log
+     * @return Logger
      */
-    public function start();
+    public function updateStatus($status);
 
     /**
-     * Update the log status to success.
-     *
      * @return Log
-     */
-    public function success();
-
-    /**
-     * Update the log status to failure.
-     *
-     * @return Log
-     */
-    public function failure();
-
-    /**
-     * @return Log|null
      */
     public function getLog();
 }

@@ -9,14 +9,13 @@ interface Client
     /**
      * Create a new log with the given parent.
      *
-     * @param LogNode $log
-     * @param Log     $parent
+     * @param Log $log
      *
      * @throws ClientException
      *
      * @return Log
      */
-    public function create(LogNode $log, Log $parent = null);
+    public function create(Log $log);
 
     /**
      * @param Log    $log

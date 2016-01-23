@@ -5,9 +5,9 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="log_stream.normalizer" class="LogStream\Client\LogNormalizer" />
+        <service id="log_stream.node_normalizer.base" class="LogStream\Node\Normalizer\BaseNormalizer" />
 
-        <service id="log_stream.logger_factory" class="LogStream\TreeLoggerFactory">
+        <service id="log_stream.logger_factory" class="LogStream\Tree\TreeLoggerFactory">
             <argument type="service" id="log_stream.client" />
         </service>
     </services>

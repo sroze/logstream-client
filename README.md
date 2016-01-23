@@ -10,14 +10,14 @@ This library can be used both as standalone or with the Symfony integration.
 
 ```php
 use GuzzleHttp\Client;
-use LogStream\Client\Http\LogNormalizer;
+use LogStream\Client\Http\JsonSerializableNormalizer;
 use LogStream\Client\HttpClient;
 use LogStream\TreeLoggerFactory;
 
 $loggerFactory = new TreeLoggerFactory(
     new HttpClient(
         new Client(),
-        new LogNormalizer(),
+        new JsonSerializableNormalizer(),
         $address
     )
 );
@@ -37,30 +37,20 @@ $bundles = [
 Then, simply adds the configuration:
 ```yml
 log_stream:
-    url: ws://address-of-logstream:8080
-    websocket: true
-
-    # You can also uses the _slow_ HTTP API by using an HTTP `url` and then setting `websocket` to false
-    # or simply removing the `websocket` configuration.
+    url: https://api.logstream.io
 ```
 
 #### Configuration reference
 
 ```yml
 log_stream:
-    # Address of the LogStream WebSocket or API
-    url: ws://logstream:8080
-
-    # (optional, default false) Uses websocket or not?
-    websocket: true
-
-    # (optional, default null) Use the following operation runner (service ID) to decorates the client
-    operation_runner: my.operation_runner
+    # Address of LogStream API
+    url: https://api.logstream.io
 ```
 
 ## Operation runner
 
-An interesting feature is the integration with the [FaultTolerance library](https://github.com/sroze/FaultTolerance):
+An interesting feature is the integration with the [FaultTolerance library](https://github.com/sroze/Tolerance):
 there's a client decorator, `OperationRunnerDecorator` that accepts an operation runner to run the client's calls. That
 way you can easily have a retry feature in case of problems in the real-time stream:
 

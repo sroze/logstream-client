@@ -24,21 +24,8 @@ class LogStreamExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('client_http2.xml');
 
-        $clientProtocol = $config['websocket']['enabled'] ? 'websocket' : 'http';
-        $loader->load('client_'.$clientProtocol.'.xml');
-
-        $clientId = 'log_stream.'.$clientProtocol.'_client';
-
-        if ($config['operation_runner'] !== null) {
-            $container->setDefinition('log_stream.client.operation_runner_decorator', new Definition(OperationRunnerDecorator::class, [
-                new Reference($clientId),
-                new Reference($config['operation_runner']),
-            ]));
-
-            $clientId = 'log_stream.client.operation_runner_decorator';
-        }
-
-        $container->setAlias('log_stream.client', $clientId);
+        $container->setAlias('log_stream.client', 'log_stream.http2_client');
     }
 }
