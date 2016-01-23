@@ -6,6 +6,7 @@ use LogStream\Client\Normalizer\LogNormalizer;
 use LogStream\Log;
 use LogStream\Node\Normalizer\NodeNormalizer;
 use LogStream\Tree\TreeLog;
+use PhpSpec\Exception\Exception;
 
 class TreeLogNormalizer implements LogNormalizer
 {
@@ -29,6 +30,8 @@ class TreeLogNormalizer implements LogNormalizer
     {
         if (!$log instanceof TreeLog) {
             return [];
+        } else if (null === $log->getNode()) {
+            throw new Exception('The log do not contains any node and wants to be serialized?');
         }
 
         return array_merge($this->nodeNormalizer->normalize($log->getNode()), [

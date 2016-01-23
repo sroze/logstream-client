@@ -6,6 +6,7 @@ use LogStream\Node\Container;
 use LogStream\Node\Node;
 use LogStream\Node\Raw;
 use LogStream\Node\Text;
+use LogStream\Node\VoidNode;
 
 class BaseNormalizer implements NodeNormalizer
 {
@@ -34,7 +35,7 @@ class BaseNormalizer implements NodeNormalizer
     public function denormalize(array $array)
     {
         if (!array_key_exists('type', $array)) {
-            throw new \RuntimeException('No type of node found');
+            return new VoidNode();
         }
 
         switch ($array['type']) {
@@ -48,6 +49,6 @@ class BaseNormalizer implements NodeNormalizer
                 return new Container();
         }
 
-        return;
+        throw new \RuntimeException('No type of node found');
     }
 }

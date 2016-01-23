@@ -4,6 +4,7 @@ namespace LogStream\Tree;
 
 use LogStream\Log;
 use LogStream\Node\Node;
+use LogStream\Node\VoidNode;
 
 class TreeLog implements Log
 {
@@ -83,6 +84,7 @@ class TreeLog implements Log
     {
         $log = new self();
         $log->identifier = $identifier;
+        $log->node = new VoidNode();
 
         return $log;
     }

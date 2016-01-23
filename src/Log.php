@@ -2,6 +2,8 @@
 
 namespace LogStream;
 
+use LogStream\Node\Node;
+
 interface Log
 {
     const PENDING = 'pending';
@@ -29,4 +31,9 @@ interface Log
      * @return string|null
      */
     public function getParentIdentifier();
+
+    /**
+     * @return Node
+     */
+    public function getNode();
 }
