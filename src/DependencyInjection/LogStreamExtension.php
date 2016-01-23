@@ -21,10 +21,10 @@ class LogStreamExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('log_stream.url', $config['url']);
+        $container->setParameter('log_stream.strict_ssl', $config['strict_ssl']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
-        $loader->load('client_http2.xml');
 
         $container->setAlias('log_stream.client', 'log_stream.http2_client');
     }

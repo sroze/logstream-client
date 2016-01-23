@@ -2,6 +2,7 @@
 
 namespace LogStream\Tests\Debug;
 
+use LogStream\Client\Normalizer\LogNormalizer;
 use LogStream\Log;
 use LogStream\LoggerFactory;
 
@@ -13,11 +14,18 @@ class DisplayLoggerFactory implements LoggerFactory
     private $factory;
 
     /**
-     * @param LoggerFactory $factory
+     * @var LogNormalizer
      */
-    public function __construct(LoggerFactory $factory)
+    private $logNormalizer;
+
+    /**
+     * @param LoggerFactory $factory
+     * @param LogNormalizer $logNormalizer
+     */
+    public function __construct(LoggerFactory $factory, LogNormalizer $logNormalizer)
     {
         $this->factory = $factory;
+        $this->logNormalizer = $logNormalizer;
     }
 
     /**
@@ -25,7 +33,7 @@ class DisplayLoggerFactory implements LoggerFactory
      */
     public function create()
     {
-        return new DisplayLogger($this->factory->create());
+        return new DisplayLogger($this->factory->create(), $this->logNormalizer);
     }
 
     /**
@@ -33,7 +41,7 @@ class DisplayLoggerFactory implements LoggerFactory
      */
     public function from(Log $parent)
     {
-        return new DisplayLogger($this->factory->from($parent));
+        return new DisplayLogger($this->factory->from($parent), $this->logNormalizer);
     }
 
     /**
@@ -41,6 +49,6 @@ class DisplayLoggerFactory implements LoggerFactory
      */
     public function fromId($parentId)
     {
-        return new DisplayLogger($this->factory->fromId($parentId));
+        return new DisplayLogger($this->factory->fromId($parentId), $this->logNormalizer);
     }
 }

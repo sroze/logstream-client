@@ -2,8 +2,11 @@
 
 namespace LogStream\Tests\Debug;
 
+use LogStream\Client\Normalizer\LogNormalizer;
+use LogStream\Log;
 use LogStream\Logger;
 use LogStream\LogNode;
+use LogStream\Node\Node;
 
 class DisplayLogger implements Logger
 {
@@ -13,48 +16,39 @@ class DisplayLogger implements Logger
     private $logger;
 
     /**
-     * @param Logger $logger
+     * @var LogNormalizer
      */
-    public function __construct(Logger $logger)
+    private $logNormalizer;
+
+    /**
+     * @param Logger $logger
+     * @param LogNormalizer $logNormalizer
+     */
+    public function __construct(Logger $logger, LogNormalizer $logNormalizer)
     {
         $this->logger = $logger;
+        $this->logNormalizer = $logNormalizer;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function append(LogNode $log)
+    public function child(Node $node)
     {
-        $log = $this->logger->append($log);
+        $logger = $this->logger->child($node);
+        $normalized = $this->logNormalizer->normalize($logger->getLog());
 
-        $serialized = $log->jsonSerialize();
-        echo sprintf('[%s] %s'."\n", $serialized['type'], isset($serialized['contents']) ? $serialized['contents'] : '[no content]');
+        echo sprintf('[%s] %s'."\n", $normalized['type'], isset($normalized['contents']) ? $normalized['contents'] : '[no content]');
 
-        return $log;
+        return $logger;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function start()
+    public function updateStatus($status)
     {
-        return $this->logger->start();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function success()
-    {
-        return $this->logger->success();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function failure()
-    {
-        return $this->logger->failure();
+        return $this->logger->updateStatus($status);
     }
 
     /**

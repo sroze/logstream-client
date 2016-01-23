@@ -18,6 +18,7 @@ class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->scalarNode('url')->isRequired()->end()
+                ->booleanNode('strict_ssl')->defaultTrue()->end()
             ->end()
         ;
 

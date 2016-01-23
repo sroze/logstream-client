@@ -19,18 +19,25 @@ class CurlHttp2Client implements Client
     private $baseUrl;
 
     /**
+     * @var bool
+     */
+    private $strictSsl;
+
+    /**
      * @var resource|null
      */
     private $curlHandler;
 
     /**
      * @param LogNormalizer $logNormalizer
-     * @param string        $baseUrl
+     * @param string $baseUrl
+     * @param bool $strictSsl
      */
-    public function __construct(LogNormalizer $logNormalizer, $baseUrl)
+    public function __construct(LogNormalizer $logNormalizer, $baseUrl, $strictSsl = true)
     {
         $this->baseUrl = $baseUrl;
         $this->logNormalizer = $logNormalizer;
+        $this->strictSsl = $strictSsl;
     }
 
     /**
@@ -76,7 +83,12 @@ class CurlHttp2Client implements Client
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        if (false === $this->strictSsl) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Content-Length: '.strlen($data_string),
@@ -84,11 +96,14 @@ class CurlHttp2Client implements Client
 
         $contents = $this->executeMultiplexedRequest($ch);
         $info = curl_getinfo($ch);
-        curl_close($ch);
 
         if ($info['http_code'] != 200) {
+            var_dump($info, $contents, curl_error($ch), 'ssl', $this->strictSsl, $data_string);
+        curl_close($ch);
             throw new ClientException(sprintf('Found status %d', $info['http_code']));
         }
+        curl_close($ch);
+
 
         if (null === ($json = json_decode($contents, true))) {
             throw new ClientException('The response is not a valid JSON object');
