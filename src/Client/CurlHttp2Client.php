@@ -98,12 +98,13 @@ class CurlHttp2Client implements Client
         $info = curl_getinfo($ch);
 
         if ($info['http_code'] != 200) {
-            var_dump($info, $contents, curl_error($ch), 'ssl', $this->strictSsl, $data_string);
-        curl_close($ch);
+
+            curl_close($ch);
+
             throw new ClientException(sprintf('Found status %d', $info['http_code']));
         }
-        curl_close($ch);
 
+        curl_close($ch);
 
         if (null === ($json = json_decode($contents, true))) {
             throw new ClientException('The response is not a valid JSON object');
