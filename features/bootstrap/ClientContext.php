@@ -34,7 +34,8 @@ class ClientContext implements Context, SnippetAcceptingContext
                 new TreeLogNormalizer(
                     new BaseNormalizer()
                 ),
-                $loggerFactoryOrAddress
+                $loggerFactoryOrAddress,
+                false
             ));
         } else {
             throw new \RuntimeException(sprintf('Should be either an address or a log factory'));
