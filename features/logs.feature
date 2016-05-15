@@ -18,3 +18,8 @@ Feature:
     When I update the status of the log with "success"
     Then the log should be successfully updated
     And the log should have the status "success"
+
+  Scenario: Archive a log
+    Given I have an empty container log
+    When I archive the log
+    Then the log should be archived

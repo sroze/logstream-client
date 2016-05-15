@@ -30,7 +30,7 @@ class TreeLogNormalizer implements LogNormalizer
     {
         if (!$log instanceof TreeLog) {
             return [];
-        } else if (null === $log->getNode()) {
+        } elseif (null === $log->getNode()) {
             throw new Exception('The log do not contains any node and wants to be serialized?');
         }
 
@@ -54,11 +54,21 @@ class TreeLogNormalizer implements LogNormalizer
         );
     }
 
+    /**
+     * @param array $json
+     *
+     * @return string
+     */
     private function denormalizeStatus(array $json)
     {
         return array_key_exists('status', $json) ? $json['status'] : null;
     }
 
+    /**
+     * @param array $json
+     *
+     * @return TreeLog|null
+     */
     private function denormalizeParent($json)
     {
         if (array_key_exists('parent', $json)) {
@@ -66,9 +76,5 @@ class TreeLogNormalizer implements LogNormalizer
         }
 
         return;
-    }
-
-    private function denormalizeNode($json)
-    {
     }
 }

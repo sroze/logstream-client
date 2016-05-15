@@ -64,4 +64,12 @@ class InMemoryLogClient implements Client
     {
         return $this->logs;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function archive(Log $log)
+    {
+        return $log;
+    }
 }

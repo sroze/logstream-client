@@ -3,9 +3,7 @@
 namespace LogStream\Tests\Debug;
 
 use LogStream\Client\Normalizer\LogNormalizer;
-use LogStream\Log;
 use LogStream\Logger;
-use LogStream\LogNode;
 use LogStream\Node\Node;
 
 class DisplayLogger implements Logger
@@ -21,7 +19,7 @@ class DisplayLogger implements Logger
     private $logNormalizer;
 
     /**
-     * @param Logger $logger
+     * @param Logger        $logger
      * @param LogNormalizer $logNormalizer
      */
     public function __construct(Logger $logger, LogNormalizer $logNormalizer)

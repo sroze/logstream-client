@@ -9,6 +9,7 @@ default:
             contexts:
                 - ClientContext:
                     - @log_stream.logger_factory
+                    - @log_stream.client
 
     extensions:
         Behat\Symfony2Extension:
