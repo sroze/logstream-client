@@ -2,6 +2,7 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
+use LogStream\Client;
 use LogStream\Client\CurlHttp2Client;
 use LogStream\LoggerFactory;
 use LogStream\Tree\Normalizer\TreeLogNormalizer;
@@ -18,25 +19,37 @@ class ClientContext implements Context, SnippetAcceptingContext
     private $loggerFactory;
 
     /**
+     * @var Client
+     */
+    private $client;
+
+    /**
      * @var Log|null
      */
     private $log;
 
     /**
      * @param LoggerFactory|string $loggerFactoryOrAddress
+     * @param Client $client
      */
-    public function __construct($loggerFactoryOrAddress)
+    public function __construct($loggerFactoryOrAddress, Client $client = null)
     {
-        if ($loggerFactoryOrAddress instanceof LoggerFactory) {
-            $this->loggerFactory = $loggerFactoryOrAddress;
-        } else if (is_string($loggerFactoryOrAddress)) {
-            $this->loggerFactory = new TreeLoggerFactory(new CurlHttp2Client(
+        if ($client instanceof Client) {
+            $this->client = $client;
+        } else {
+            $this->client = new CurlHttp2Client(
                 new TreeLogNormalizer(
                     new BaseNormalizer()
                 ),
                 $loggerFactoryOrAddress,
                 false
-            ));
+            );
+        }
+
+        if ($loggerFactoryOrAddress instanceof LoggerFactory) {
+            $this->loggerFactory = $loggerFactoryOrAddress;
+        } else if (is_string($loggerFactoryOrAddress)) {
+            $this->loggerFactory = new TreeLoggerFactory($this->client);
         } else {
             throw new \RuntimeException(sprintf('Should be either an address or a log factory'));
         }
@@ -82,6 +95,26 @@ class ClientContext implements Context, SnippetAcceptingContext
     public function iUpdateTheStatusOfTheLogWith($status)
     {
         $this->log = $this->loggerFactory->from($this->log)->updateStatus($status)->getLog();
+    }
+
+    /**
+     * @When I archive the log
+     */
+    public function iArchiveTheLog()
+    {
+        $this->log = $this->client->archive($this->log);
+    }
+
+    /**
+     * @Then the log should be archived
+     */
+    public function theLogShouldBeArchived()
+    {
+        $raw = $this->log->getNode()->jsonSerialize();
+
+        if (!array_key_exists('archived', $raw)) {
+            throw new \RuntimeException('The log is not archived');
+        }
     }
 
     /**

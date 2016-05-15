@@ -35,7 +35,7 @@ class BaseNormalizer implements NodeNormalizer
     public function denormalize(array $array)
     {
         if (!array_key_exists('type', $array)) {
-            return new VoidNode();
+            return new VoidNode($array);
         }
 
         switch ($array['type']) {

@@ -30,8 +30,8 @@ class CurlHttp2Client implements Client
 
     /**
      * @param LogNormalizer $logNormalizer
-     * @param string $baseUrl
-     * @param bool $strictSsl
+     * @param string        $baseUrl
+     * @param bool          $strictSsl
      */
     public function __construct(LogNormalizer $logNormalizer, $baseUrl, $strictSsl = true)
     {
@@ -60,6 +60,17 @@ class CurlHttp2Client implements Client
         $response = $this->request('PATCH', $url, [
             'status' => $status,
         ]);
+
+        return $this->logNormalizer->denormalize($response);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function archive(Log $log)
+    {
+        $url = sprintf('%s/v1/archive/%s', $this->baseUrl, $log->getId());
+        $response = $this->request('POST', $url);
 
         return $this->logNormalizer->denormalize($response);
     }
@@ -98,7 +109,6 @@ class CurlHttp2Client implements Client
         $info = curl_getinfo($ch);
 
         if ($info['http_code'] != 200) {
-
             curl_close($ch);
 
             throw new ClientException(sprintf('Found status %d', $info['http_code']));

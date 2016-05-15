@@ -26,4 +26,15 @@ interface Client
      * @return Log
      */
     public function updateStatus(Log $log, $status);
+
+    /**
+     * Archive this log.
+     *
+     * @param Log $log
+     *
+     * @throws ClientException
+     *
+     * @return Log
+     */
+    public function archive(Log $log);
 }

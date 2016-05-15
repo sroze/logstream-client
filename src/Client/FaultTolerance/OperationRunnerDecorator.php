@@ -57,4 +57,18 @@ class OperationRunnerDecorator implements Client
 
         return $operation->getResult();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function archive(Log $log)
+    {
+        $operation = new Callback(function () use ($log) {
+            return $this->client->archive($log);
+        });
+
+        $this->operationRunner->run($operation);
+
+        return $operation->getResult();
+    }
 }
