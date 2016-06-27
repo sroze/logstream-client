@@ -3,6 +3,7 @@
 namespace LogStream\Tests;
 
 use LogStream\Client;
+use LogStream\Client\ClientException;
 use LogStream\Log;
 
 class InMemoryLogClient implements Client
@@ -45,16 +46,9 @@ class InMemoryLogClient implements Client
      */
     public function updateStatus(Log $log, $status)
     {
-        $normalized = $this->logNormalizer->normalize($log);
-        $normalized['status'] = $status;
-
-        if (array_key_exists($normalized['_id'], $this->logs)) {
-            $normalized = array_merge($this->logs[$normalized['_id']], $normalized);
-        }
-
-        $this->logs[$normalized['_id']] = $normalized;
-
-        return $this->logNormalizer->denormalize($normalized);
+        return $this->patch($log, [
+            'status' => $status,
+        ]);
     }
 
     /**
@@ -71,5 +65,22 @@ class InMemoryLogClient implements Client
     public function archive(Log $log)
     {
         return $log;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function patch(Log $log, array $patch)
+    {
+        $normalized = $this->logNormalizer->normalize($log);
+        $patched = array_merge($normalized, $patch);
+
+        if (array_key_exists($patched['_id'], $this->logs)) {
+            $patched = array_merge($this->logs[$patched['_id']], $patched);
+        }
+
+        $this->logs[$patched['_id']] = $patched;
+
+        return $this->logNormalizer->denormalize($patched);
     }
 }
