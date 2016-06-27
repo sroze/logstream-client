@@ -46,7 +46,12 @@ class TreeLogger implements Logger
      */
     public function updateStatus($status)
     {
-        $this->log = $this->client->updateStatus($this->log, $status);
+        $patch = [
+            'status' => $status,
+            $status.'At' => (new \DateTime())->format(\DateTime::ISO8601),
+        ];
+
+        $this->log = $this->client->patch($this->log, $patch);
 
         return $this;
     }

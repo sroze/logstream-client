@@ -56,10 +56,18 @@ class CurlHttp2Client implements Client
      */
     public function updateStatus(Log $log, $status)
     {
-        $url = sprintf('%s/v1/logs/%s', $this->baseUrl, $log->getId());
-        $response = $this->request('PATCH', $url, [
+        return $this->patch($log, [
             'status' => $status,
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function patch(Log $log, array $patch)
+    {
+        $url = sprintf('%s/v1/logs/%s', $this->baseUrl, $log->getId());
+        $response = $this->request('PATCH', $url, $patch);
 
         return $this->logNormalizer->denormalize($response);
     }
