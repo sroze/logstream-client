@@ -6,6 +6,7 @@ use LogStream\Client;
 use LogStream\Log;
 use LogStream\LoggerFactory;
 use LogStream\Node\Container;
+use LogStream\Node\Normalizer\NodeNormalizer;
 
 class TreeLoggerFactory implements LoggerFactory
 {
@@ -15,11 +16,18 @@ class TreeLoggerFactory implements LoggerFactory
     private $client;
 
     /**
-     * @param Client $client
+     * @var NodeNormalizer
      */
-    public function __construct(Client $client)
+    private $nodeNormalizer;
+
+    /**
+     * @param Client $client
+     * @param NodeNormalizer $nodeNormalizer
+     */
+    public function __construct(Client $client, NodeNormalizer $nodeNormalizer)
     {
         $this->client = $client;
+        $this->nodeNormalizer = $nodeNormalizer;
     }
 
     /**
@@ -47,6 +55,6 @@ class TreeLoggerFactory implements LoggerFactory
      */
     public function from(Log $log)
     {
-        return new TreeLogger($this->client, $log);
+        return new TreeLogger($this->client, $this->nodeNormalizer, $log);
     }
 }
