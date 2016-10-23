@@ -18,7 +18,7 @@ class Complex implements Node
      * @param string $type
      * @param array $data
      */
-    public function __construct($type, array $data)
+    public function __construct($type, array $data = [])
     {
         $this->type = $type;
         $this->data = $data;
