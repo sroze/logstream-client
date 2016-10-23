@@ -34,11 +34,20 @@ class DisplayLogger implements Logger
     public function child(Node $node)
     {
         $logger = $this->logger->child($node);
-        $normalized = $this->logNormalizer->normalize($logger->getLog());
+        $log = $logger->getLog();
 
+        $normalized = $this->logNormalizer->normalize($log);
         echo sprintf('[%s] %s'."\n", $normalized['type'], isset($normalized['contents']) ? $normalized['contents'] : '[no content]');
 
         return $logger;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update(Node $node)
+    {
+        return $this;
     }
 
     /**

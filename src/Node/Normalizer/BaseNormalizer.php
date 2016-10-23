@@ -2,14 +2,29 @@
 
 namespace LogStream\Node\Normalizer;
 
+use LogStream\Node\Complex;
 use LogStream\Node\Container;
 use LogStream\Node\Node;
 use LogStream\Node\Raw;
 use LogStream\Node\Text;
 use LogStream\Node\VoidNode;
+use Psr\Log\LoggerInterface;
 
 class BaseNormalizer implements NodeNormalizer
 {
+    /**
+     * @var null|LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @param LoggerInterface|null $logger
+     */
+    public function __construct(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -26,7 +41,7 @@ class BaseNormalizer implements NodeNormalizer
             ];
         }
 
-        return [];
+        return $node->jsonSerialize();
     }
 
     /**
@@ -46,9 +61,15 @@ class BaseNormalizer implements NodeNormalizer
                     return new Text($array['contents']);
                 }
 
-                return new Container();
         }
 
-        throw new \RuntimeException('No type of node found');
+        if (null !== $this->logger) {
+            $this->logger->warning('Got a log node without known type', [
+                'type' => $array['type'],
+                'node' => $array
+            ]);
+        }
+
+        return new Complex($array['type'], $array);
     }
 }

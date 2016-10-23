@@ -6,6 +6,7 @@ use LogStream\Client;
 use LogStream\Log;
 use LogStream\Logger;
 use LogStream\Node\Node;
+use LogStream\Node\Normalizer\NodeNormalizer;
 
 class TreeLogger implements Logger
 {
@@ -15,17 +16,24 @@ class TreeLogger implements Logger
     private $client;
 
     /**
+     * @var NodeNormalizer
+     */
+    private $nodeNormalizer;
+
+    /**
      * @var Log
      */
     private $log;
 
     /**
      * @param Client $client
-     * @param Log    $log
+     * @param NodeNormalizer $nodeNormalizer
+     * @param Log $log
      */
-    public function __construct(Client $client, Log $log)
+    public function __construct(Client $client, NodeNormalizer $nodeNormalizer, Log $log)
     {
         $this->client = $client;
+        $this->nodeNormalizer = $nodeNormalizer;
         $this->log = $log;
     }
 
@@ -38,7 +46,17 @@ class TreeLogger implements Logger
             TreeLog::fromNodeAndParent($node, $this->log)
         );
 
-        return new self($this->client, $child);
+        return new self($this->client, $this->nodeNormalizer, $child);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update(Node $node)
+    {
+        $this->log = $this->client->patch($this->log, $this->nodeNormalizer->normalize($node));
+
+        return $this;
     }
 
     /**
