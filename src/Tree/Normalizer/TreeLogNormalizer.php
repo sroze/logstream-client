@@ -34,11 +34,11 @@ class TreeLogNormalizer implements LogNormalizer
             throw new Exception('The log do not contains any node and wants to be serialized?');
         }
 
-        return array_merge($this->nodeNormalizer->normalize($log->getNode()), [
+        return array_merge([
             '_id' => $log->getId(),
             'parent' => $log->getParentIdentifier(),
             'status' => $log->getStatus(),
-        ]);
+        ], $this->nodeNormalizer->normalize($log->getNode()));
     }
 
     /**
