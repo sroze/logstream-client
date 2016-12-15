@@ -47,7 +47,7 @@ class DisplayLogger implements Logger
      */
     public function update(Node $node)
     {
-        return $this;
+        return $this->logger->update($node);
     }
 
     /**
