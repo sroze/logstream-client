@@ -9,7 +9,7 @@
         "bin-dir": "bin"
     },
     "require": {
-        "symfony/serializer": "~2.8",
+        "symfony/serializer": "^2.8|^3.0",
         "predis/predis": "~1.0"
     },
     "suggest": {
@@ -19,8 +19,8 @@
         "phpspec/phpspec": "2.3.x@dev",
         "behat/behat": "^3.0",
         "behat/symfony2-extension": "^2.1",
-        "symfony/http-kernel": "~2.8",
-        "symfony/dependency-injection": "~2.8",
-        "symfony/config": "~2.8"
+        "symfony/http-kernel": "^2.8|^3.0",
+        "symfony/dependency-injection": "^2.8|^3.0",
+        "symfony/config": "^2.8|^3.0"
     }
 }
