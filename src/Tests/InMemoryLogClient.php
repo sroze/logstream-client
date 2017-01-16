@@ -41,6 +41,17 @@ class InMemoryLogClient implements Client
         return $this->logNormalizer->denormalize($normalized);
     }
 
+    public function find(string $identifier)
+    {
+        if (!array_key_exists($identifier, $this->logs)) {
+            throw new \RuntimeException(sprintf('Log "%s" not found', $identifier));
+        }
+
+        return $this->logNormalizer->denormalize(
+            $this->logs[$identifier]
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
