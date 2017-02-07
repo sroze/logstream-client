@@ -63,13 +63,6 @@ class BaseNormalizer implements NodeNormalizer
 
         }
 
-        if (null !== $this->logger) {
-            $this->logger->warning('Got a log node without known type', [
-                'type' => $array['type'],
-                'node' => $array
-            ]);
-        }
-
         return new Complex($array['type'], $array);
     }
 }
