@@ -4,6 +4,7 @@ namespace LogStream\FaultTolerance;
 
 use LogStream\Log;
 use LogStream\LoggerFactory;
+use Psr\Log\LoggerInterface;
 use Tolerance\Operation\Callback;
 use Tolerance\Operation\Runner\OperationRunner;
 
@@ -20,13 +21,18 @@ class FaultTolerantLoggerFactory implements LoggerFactory
     private $operationRunner;
 
     /**
-     * @param LoggerFactory $decoratedFactory
-     * @param OperationRunner $operationRunner
+     * @var LoggerInterface
      */
-    public function __construct(LoggerFactory $decoratedFactory, OperationRunner $operationRunner)
-    {
+    private $systemLogger;
+
+    public function __construct(
+        LoggerFactory $decoratedFactory,
+        OperationRunner $operationRunner,
+        LoggerInterface $systemLogger
+    ) {
         $this->decoratedFactory = $decoratedFactory;
         $this->operationRunner = $operationRunner;
+        $this->systemLogger = $systemLogger;
     }
 
     /**
@@ -37,7 +43,8 @@ class FaultTolerantLoggerFactory implements LoggerFactory
         return $this->operationRunner->run(new Callback(function() {
             return new FaultTolerantLogger(
                 $this->decoratedFactory->create(),
-                $this->operationRunner
+                $this->operationRunner,
+                $this->systemLogger
             );
         }));
     }
@@ -49,7 +56,8 @@ class FaultTolerantLoggerFactory implements LoggerFactory
     {
         return new FaultTolerantLogger(
             $this->decoratedFactory->from($log),
-            $this->operationRunner
+            $this->operationRunner,
+            $this->systemLogger
         );
     }
 
@@ -60,7 +68,8 @@ class FaultTolerantLoggerFactory implements LoggerFactory
     {
         return new FaultTolerantLogger(
             $this->decoratedFactory->fromId($identifier),
-            $this->operationRunner
+            $this->operationRunner,
+            $this->systemLogger
         );
     }
 }
