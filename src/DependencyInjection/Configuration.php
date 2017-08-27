@@ -19,6 +19,13 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('url')->isRequired()->end()
                 ->booleanNode('strict_ssl')->defaultTrue()->end()
+
+                ->arrayNode('tolerance')
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('operation_runner')->isRequired()->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

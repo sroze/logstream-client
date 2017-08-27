@@ -23,6 +23,12 @@ class LogStreamExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
+        if ($config['tolerance']['enabled']) {
+            $container->setAlias('log_stream.tolerance.operation_runner', $config['tolerance']['operation_runner']);
+
+            $loader->load('tolerance.xml');
+        }
+
         $container->setAlias('log_stream.client', 'log_stream.http2_client');
     }
 }

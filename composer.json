@@ -10,17 +10,18 @@
     },
     "require": {
         "symfony/serializer": "^2.8|^3.0",
-        "predis/predis": "~1.0"
+        "predis/predis": "~1.0",
+        "tolerance/tolerance": "^0.4.0"
     },
     "suggest": {
         "sroze/tolerance": "To handle fault tolerant LogStream"
     },
     "require-dev": {
-        "phpspec/phpspec": "2.3.x@dev",
         "behat/behat": "^3.0",
         "behat/symfony2-extension": "^2.1",
-        "symfony/http-kernel": "^2.8|^3.0",
-        "symfony/dependency-injection": "^2.8|^3.0",
-        "symfony/config": "^2.8|^3.0"
+        "phpspec/phpspec": "~4.0",
+        "symfony/http-kernel": "^2.8|~3.0",
+        "symfony/dependency-injection": "^2.8|~3.0",
+        "symfony/config": "^2.8|~3.0"
     }
 }
