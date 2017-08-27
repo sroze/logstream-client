@@ -3,6 +3,7 @@
 namespace LogStream\Tests\Debug;
 
 use LogStream\Client\Normalizer\LogNormalizer;
+use LogStream\Log;
 use LogStream\Logger;
 use LogStream\Node\Node;
 
@@ -36,10 +37,9 @@ class DisplayLogger implements Logger
         $logger = $this->logger->child($node);
         $log = $logger->getLog();
 
-        $normalized = $this->logNormalizer->normalize($log);
-        echo sprintf('[%s] %s'."\n", $normalized['type'], isset($normalized['contents']) ? $normalized['contents'] : '[no content]');
+        $this->display($log);
 
-        return $logger;
+        return new self($logger, $this->logNormalizer);
     }
 
     /**
@@ -55,7 +55,11 @@ class DisplayLogger implements Logger
      */
     public function updateStatus($status)
     {
-        return $this->logger->updateStatus($status);
+        $logger = $this->logger->updateStatus($status);
+
+        $this->display($logger->getLog());
+
+        return new self($logger, $this->logNormalizer);
     }
 
     /**
@@ -64,5 +68,15 @@ class DisplayLogger implements Logger
     public function getLog()
     {
         return $this->logger->getLog();
+    }
+
+    /**
+     * @param Log $log
+     */
+    private function display(Log $log)
+    {
+        $normalized = $this->logNormalizer->normalize($log);
+
+        echo sprintf('[%s] [%s] %s' . "\n", isset($normalized['status']) ? $normalized['status'] : '?', isset($normalized['type']) ? $normalized['type'] : '?type', isset($normalized['contents']) ? $normalized['contents'] : '[no content]');
     }
 }
