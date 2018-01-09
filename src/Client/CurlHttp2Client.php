@@ -119,15 +119,15 @@ class CurlHttp2Client implements Client
         if ($info['http_code'] != 200) {
             curl_close($ch);
 
-            throw new ClientException(sprintf('Found status %d', $info['http_code']));
+            throw new ClientException(sprintf('Error while sending a request to LogStream: found status %d', $info['http_code']));
         }
 
         curl_close($ch);
 
         if (null === ($json = json_decode($contents, true))) {
-            throw new ClientException('The response is not a valid JSON object');
+            throw new ClientException('Error while sending a request to LogStream: The response is not a valid JSON object');
         } elseif (!array_key_exists('_id', $json)) {
-            throw new ClientException('No `_id` found in response');
+            throw new ClientException('Error while sending a request to LogStream: No `_id` found in response');
         }
 
         return $json;
